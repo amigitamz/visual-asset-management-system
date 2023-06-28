@@ -242,7 +242,7 @@ export class VAMS extends cdk.Stack {
 
         NagSuppressions.addResourceSuppressionsByPath(
             this,
-            `/${props.stackName}/WebApp/WebAppDistribution/Resource`,
+            `vams-code-pipeline-stack/preProd/${props.stackName}/WebApp/WebAppDistribution/Resource`,
             [
                 {
                     id: "AwsSolutions-CFR4",
@@ -253,11 +253,11 @@ export class VAMS extends cdk.Stack {
         );
 
         const refactorPaths = [
-            `/${props.stackName}/VAMSWorkflowIAMRole/Resource`,
-            `/${props.stackName}/lambdaPipelineRole`,
-            `/${props.stackName}/pipelineService`,
-            `/${props.stackName}/workflowService`,
-            `/${props.stackName}/listExecutions`,
+            `vams-code-pipeline-stack/preProd/${props.stackName}/VAMSWorkflowIAMRole/Resource`,
+            `vams-code-pipeline-stack/preProd/${props.stackName}/lambdaPipelineRole`,
+            `vams-code-pipeline-stack/preProd/${props.stackName}/pipelineService`,
+            `vams-code-pipeline-stack/preProd/${props.stackName}/workflowService`,
+            `vams-code-pipeline-stack/preProd/${props.stackName}/listExecutions`,
         ];
         for (const path of refactorPaths) {
             const reason = `Intention is to refactor this model away moving forward 

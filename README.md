@@ -77,7 +77,17 @@ Please take note:
 
 ### Deploy VAMS for the First Time
 
-#### Build & Deploy Steps (Linux/Mac)
+### Create a CodeStar connection between your repository and AWS account
+
+CodeStar connections are configurations that you use to connect AWS resources to external code repositories. VAMS solution uses a CodePipeline to deploy the resources and this connection will provide CodePipeline access to source code as well as trigger the pipeline everytime there is a code change in your repository.
+
+1. Create a fork of this repository in your Github account
+
+2. Follow the steps provided [here](https://docs.aws.amazon.com/dtconsole/latest/userguide/connections-create-github.html) to create a CodeStar connection between the forked repository in your account and your AWS account
+
+3. Once you have successfully created the connection, note down the ARN for the CodeStar connection. This ARN will be used in later steps.
+
+#### Build & Deploy Steps for the first time (Linux/Mac)
 
 VAMS Codebase is changing frequently and we recommend you checkout the stable released version from github.
 
@@ -93,19 +103,21 @@ You can identify stable releases by their tag. Fetch the tags `git fetch --all -
 
 5. If you haven't already bootstrapped your aws account with CDK. `cdk bootstrap aws://101010101010/us-east-1` - replace with your account and region.
 
-6. Set the CDK stack name and the region for deployment with environment variables `export AWS_REGION=us-east-1 && export STACK_NAME=dev` - replace with the region you would like to deploy to and the name you want to associate with the cloudformation stack that the CDK will deploy.
+6. Set the CDK stack name and the region for deployment with environment variables `export AWS_REGION=us-east-1 && export STACK_NAME=dev && export REPO_OWNER=REPO_OWNER && export CONNECTION_ARN=ARN` - replace with the region you would like to deploy to and the name you want to associate with the cloudformation stack that the CDK will deploy.
 
-7. `npm run deploy.dev adminEmailAddress=myuser@example.com` - replace with your email address to deploy. An account is created in an AWS Cognito User Pool using this email address. Expect an email from no-reply@verificationemail.com with a temporary password.
+7. `npm run deploy.dev adminEmailAddress=myuser@example.com,repo-ower=awslabs,connection-arn=arn:aws:codestar-connections:us-east-1:ACCOUNT_ID:connection/CONNECTION_ID` - replace with your own email address, repository owner and connection ARN to deploy. Connection ARN will be the connection ARN from the previous steps. 
+
+8. This will deploy an AWS CodePipeline in your account and the pipeline will deploy AWS CloudFormation stacks to create resources for VAMS in your AWS account. After successful deployment, an account is created in an AWS Cognito User Pool using this email address. Expect an email from no-reply@verificationemail.com with a temporary password.
 
 #### Deployment Success
 
-1. Navigate to URL provided in `{stackName].WebAppCloudFrontDistributionDomainName{uuid}` from `cdk deploy` output.
+1. Navigate to URL provided in `{stackName].WebAppCloudFrontDistributionDomainName{uuid}` from stack deployment output.
 
 2. Check email for temporary account password to log in with the email address you provided.
 
 ### Multiple Deployments With Different or Same Region in Single Account
 
-You can change the region and deploy a new instance of VAMS my setting the environment variables to new values (`export AWS_REGION=us-east-1 && export STACK_NAME=dev`) and then running `npm run deploy.dev adminEmailAddress=myuser@example.com` again.
+You can change the region and deploy a new instance of VAMS my setting the environment variables to new values (`export AWS_REGION=us-east-1 && export STACK_NAME=dev && export REPO_OWNER=REPO_OWNER && export CONNECTION_ARN=ARN`) and then running `npm run deploy.dev adminEmailAddress=myuser@example.com,repo-owner=REPOSITORY_OWNER,connection-arn=ARN` again.
 
 ### Deploy VAMS Updates
 
@@ -128,6 +140,10 @@ Please refer to the uploadAssetWorkflow in the [API docs](./VAMS_API.yaml) to fi
 ### Backend
 
 VAMS Backend is composed of AWS Lambda functions that are accessed through an AWS API Gateway.
+
+### CI/CD
+
+VAMS uses CodePipeline for automated delivery and deployment of VAMS application in AWS accounts.
 
 #### Architecture diagrams for Individual components
 
