@@ -77,15 +77,15 @@ Please take note:
 
 ### Deploy VAMS for the First Time
 
-### Create a CodeStar connection between your repository and AWS account
+### Create a AWS CodeStar source connection between your repository and AWS account
 
-CodeStar connections are configurations that you use to connect AWS resources to external code repositories. VAMS solution uses a CodePipeline to deploy the resources and this connection will provide CodePipeline access to source code as well as trigger the pipeline everytime there is a code change in your repository.
+ Connections are configurations that you use to connect AWS resources to external code repositories. VAMS solution uses AWS CodePipeline to deploy the resources and this connection will provide CodePipeline access to source code as well as trigger the pipeline everytime there is a code change in your repository.
 
 1. Create a fork of this repository in your Github account
 
-2. Follow the steps provided [here](https://docs.aws.amazon.com/dtconsole/latest/userguide/connections-create-github.html) to create a CodeStar connection between the forked repository in your account and your AWS account
+2. Follow the steps provided [here](https://docs.aws.amazon.com/dtconsole/latest/userguide/connections-create-github.html) to create a connection between the forked repository in your account and your AWS account using CodePipeline console.
 
-3. Once you have successfully created the connection, note down the ARN for the CodeStar connection. This ARN will be used in later steps.
+3. Once you have successfully created the connection, note down the ARN for the connection. This ARN will be used in later steps.
 
 #### Build & Deploy Steps for the first time (Linux/Mac)
 
@@ -137,13 +137,13 @@ Please refer to the uploadAssetWorkflow in the [API docs](./VAMS_API.yaml) to fi
 
 ### Architecture components
 
-### Backend
-
-VAMS Backend is composed of AWS Lambda functions that are accessed through an AWS API Gateway.
-
 ### CI/CD
 
 VAMS uses CodePipeline for automated delivery and deployment of VAMS application in AWS accounts.
+
+### Backend
+
+VAMS Backend is composed of AWS Lambda functions that are accessed through an AWS API Gateway.
 
 #### Architecture diagrams for Individual components
 
