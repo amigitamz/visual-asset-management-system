@@ -14,14 +14,14 @@ import { CodePipelineStack } from "../lib/code-pipeline-stack";
 const app = new cdk.App();
 const region = process.env.AWS_REGION || "us-east-1";
 /** development variables **/
-const enableCdkNag = false;
+const enableCdkNag = true;
 
 if (enableCdkNag) {
     Aspects.of(app).add(new AwsSolutionsChecks({ verbose: true }));
 }
 
 new CodePipelineStack(app, "vams-code-pipeline-stack", {
-    env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: "eu-west-2" },
+    env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: region },
 });
 
 app.synth();
