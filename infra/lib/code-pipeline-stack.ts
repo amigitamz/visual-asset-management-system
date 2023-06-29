@@ -27,7 +27,7 @@ export class CodePipelineStack extends cdk.Stack {
             // How it will be built and synthesized
             synth: new ShellStep("Synth", {
                 // Where the source can be found
-                input: CodePipelineSource.connection(repository, "main", {
+                input: CodePipelineSource.connection(repository, "multi-file-archiving", {
                     connectionArn: connectionArn, // Created using the AWS console
                 }),
                 env: {

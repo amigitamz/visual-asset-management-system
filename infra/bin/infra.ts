@@ -14,7 +14,7 @@ import { CodePipelineStack } from "../lib/code-pipeline-stack";
 const app = new cdk.App();
 const region = process.env.AWS_REGION || "us-east-1";
 /** development variables **/
-const enableCdkNag = true;
+const enableCdkNag = false;
 
 if (enableCdkNag) {
     Aspects.of(app).add(new AwsSolutionsChecks({ verbose: true }));
