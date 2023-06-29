@@ -149,7 +149,11 @@ def delete_asset(databaseId, assetId, queryParameters):
     if item:
         print("Deleting asset: ", item)
         if "assetLocation" in item:
-            archive_file(item['assetLocation'])
+            print(item['isMultiFile'])
+            if item['isMultiFile']:
+                archive_multi_file(item['assetLocation'])
+            else:
+                archive_file(item['assetLocation'])
         if "previewLocation" in item:
             archive_file(item['previewLocation'])
         item['databaseId'] = databaseId + "#deleted"
@@ -164,6 +168,47 @@ def delete_asset(databaseId, assetId, queryParameters):
         response['message'] = "Asset deleted"
     return response
 
+def archive_multi_file(location):
+    s3 = boto3.client('s3')
+    bucket = ""
+    prefix = ""
+    if "Bucket" in location:
+        bucket = location['Bucket']
+    if "Key" in location:
+        prefix = location['Key']
+    if len(bucket) == 0 or len(prefix) == 0:
+        return
+    print('Archiving folder with multiple files')
+
+    objects = s3.list_objects_v2(
+        Bucket=bucket,
+        Prefix=prefix
+    )
+
+    if len(objects['Contents']) == 0:
+        return
+    
+    for item in objects['Contents']:
+        key = item['Key']
+        source = {
+            'Bucket': bucket,
+            'Key': key
+        }
+        try:
+            response = s3.copy(
+                source, bucket, key,
+                ExtraArgs={
+                    'StorageClass': 'GLACIER',
+                    'MetadataDirective': 'COPY'
+                }
+            )
+            print("S3 response: ", response)
+
+        except s3.exceptions.InvalidObjectState as ios:
+            print("S3 object already archived: ", key)
+            print(ios)
+
+    return
 
 def archive_file(location):
     s3 = boto3.client('s3')
