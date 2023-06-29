@@ -149,7 +149,6 @@ def delete_asset(databaseId, assetId, queryParameters):
     if item:
         print("Deleting asset: ", item)
         if "assetLocation" in item:
-            print(item['isMultiFile'])
             if item['isMultiFile']:
                 archive_multi_file(item['assetLocation'])
             else:
