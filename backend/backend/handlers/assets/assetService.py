@@ -179,16 +179,13 @@ def archive_multi_file(location):
         return
     print('Archiving folder with multiple files')
 
-    objects = s3.list_objects_v2(
-        Bucket=bucket,
-        Prefix=prefix
-    )
-
-    if len(objects['Contents']) == 0:
-        return
+    paginator = s3.get_paginator('list_objects_v2')
+    files = []
+    for page in paginator.paginate(Bucket=bucket, Prefix=prefix):
+        for obj in page['Contents']:
+            files.append(obj['Key'])
     
-    for item in objects['Contents']:
-        key = item['Key']
+    for key in files:
         source = {
             'Bucket': bucket,
             'Key': key
